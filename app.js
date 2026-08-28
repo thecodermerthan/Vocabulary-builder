@@ -8,6 +8,8 @@ const dictionaryRoutes = require("./routes/dictionaryRoutes");
 const savedWordsRoutes = require("./routes/savedWordsRoutes");
 const goalsRoutes = require("./routes/goalsRoutes");
 const achievementsRoutes = require("./routes/achievementsRoutes");
+const quizRoutes = require("./routes/quizRoutes");
+
 
 const app = express();
 app.use(cors());
@@ -23,5 +25,6 @@ app.use("/", dictionaryRoutes);
 app.use("/", savedWordsRoutes);
 app.use("/", goalsRoutes);
 app.use("/", achievementsRoutes);
+app.use("/", quizRoutes);
 
 module.exports = app;

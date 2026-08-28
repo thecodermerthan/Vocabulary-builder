@@ -1,5 +1,6 @@
 const savedWordsRepository = require("../repositories/savedWordsRepository");
 const achievementsService = require("./achievementsService");
+const { getChannel, QUEUE_NAME } = require("../config/rabbitmq");
 
 async function saveWord(customerId, wordData) {
   const existing = await savedWordsRepository.findByWordAndCustomer(customerId, wordData.word);
@@ -9,7 +10,14 @@ async function saveWord(customerId, wordData) {
 
   const result = await savedWordsRepository.insert(customerId, wordData);
 
-  // check achievements right after saving
+  // publish an event for background enrichment — don't wait for it to finish
+  const channel = getChannel();
+  const message = JSON.stringify({
+    savedWordId: result.insertedId.toString(),
+    word: wordData.word
+  });
+  channel.sendToQueue(QUEUE_NAME, Buffer.from(message), { persistent: true });
+
   const allWords = await savedWordsRepository.findByCustomer(customerId);
   const newAchievement = await achievementsService.checkAndUnlock(customerId, allWords.length);
 

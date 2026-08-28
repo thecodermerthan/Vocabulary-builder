@@ -33,4 +33,35 @@ async function deleteById(id, customerId) {
   });
 }
 
-module.exports = { insert, findByCustomer, findByWordAndCustomer, deleteById };
+async function updateRelatedWords(id, relatedWords) {
+  const db = getDB();
+  return await db.collection("savedWords").updateOne(
+    { _id: new ObjectId(id) },
+    { $set: { relatedWords } }
+  );
+}
+
+async function findRandom(customerId, excludeId = null) {
+  const db = getDB();
+  const filter = { customerId: new ObjectId(customerId) };
+  if (excludeId) filter._id = { $ne: new ObjectId(excludeId) };
+
+  const count = await db.collection("savedWords").countDocuments(filter);
+  if (count === 0) return null;
+
+  const randomIndex = Math.floor(Math.random() * count);
+  const results = await db.collection("savedWords").find(filter).skip(randomIndex).limit(1).toArray();
+  return results[0];
+}
+
+async function findRandomMultiple(customerId, count) {
+  const db = getDB();
+  return await db.collection("savedWords")
+    .aggregate([
+      { $match: { customerId: new ObjectId(customerId) } },
+      { $sample: { size: count } }
+    ])
+    .toArray();
+}
+
+module.exports = { insert, findByCustomer, findByWordAndCustomer, deleteById, updateRelatedWords, findRandom, findRandomMultiple };
