@@ -19,4 +19,15 @@ async function getCustomers(req, res) {
   }
 }
 
-module.exports = { register, getCustomers };
+async function login(req, res) {
+  try {
+    const { email, password } = req.body;
+    const token = await authService.loginCustomer({ email, password });
+    res.json({ token });
+  } catch (err) {
+    res.status(401).json({ error: err.message });
+  }
+}
+
+module.exports = { register, getCustomers, login };
+

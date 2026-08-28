@@ -1,3 +1,6 @@
+const dns = require("dns");
+dns.setDefaultResultOrder("ipv4first");
+
 const { MongoClient } = require("mongodb");
 
 const client = new MongoClient(process.env.MONGO_URI);
@@ -15,4 +18,8 @@ function getDB() {
   return db;
 }
 
-module.exports = { connectDB, getDB };
+async function closeDB() {
+  await client.close();
+}
+
+module.exports = { connectDB, getDB, closeDB };
