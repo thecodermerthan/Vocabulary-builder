@@ -7,6 +7,7 @@ const authenticateToken = require("../middleware/authenticateToken");
  * @swagger
  * /achievements:
  *   get:
+ *     tags: [Achievements]
  *     summary: Get your unlocked achievements
  *     security:
  *       - bearerAuth: []

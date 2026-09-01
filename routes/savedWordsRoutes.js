@@ -7,6 +7,7 @@ const authenticateToken = require("../middleware/authenticateToken");
  * @swagger
  * /savedWords:
  *   post:
+ *     tags: [Saved Words]
  *     summary: Save a word to your personal list
  *     security:
  *       - bearerAuth: []
@@ -17,11 +18,16 @@ const authenticateToken = require("../middleware/authenticateToken");
  *           schema:
  *             type: object
  *             properties:
- *               word: { type: string }
- *               definition: { type: string }
- *               partOfSpeech: { type: string }
- *               phonetic: { type: string }
- *               example: { type: string }
+ *               word:
+ *                 type: string
+ *               definition:
+ *                 type: string
+ *               partOfSpeech:
+ *                 type: string
+ *               phonetic:
+ *                 type: string
+ *               example:
+ *                 type: string
  *     responses:
  *       201:
  *         description: Word saved (may include newAchievement)
@@ -34,6 +40,7 @@ router.post("/savedWords", authenticateToken, savedWordsController.create);
  * @swagger
  * /savedWords:
  *   get:
+ *     tags: [Saved Words]
  *     summary: Get all words you've saved
  *     security:
  *       - bearerAuth: []
@@ -47,6 +54,7 @@ router.get("/savedWords", authenticateToken, savedWordsController.getAll);
  * @swagger
  * /savedWords/{id}:
  *   delete:
+ *     tags: [Saved Words]
  *     summary: Delete one of your saved words
  *     security:
  *       - bearerAuth: []
@@ -63,6 +71,5 @@ router.get("/savedWords", authenticateToken, savedWordsController.getAll);
  *         description: Word not found
  */
 router.delete("/savedWords/:id", authenticateToken, savedWordsController.remove);
-
 
 module.exports = router;

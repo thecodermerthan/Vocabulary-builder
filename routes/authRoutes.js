@@ -7,6 +7,7 @@ const authenticateToken = require("../middleware/authenticateToken");
  * @swagger
  * /register:
  *   post:
+ *     tags: [Auth]
  *     summary: Register a new customer account
  *     requestBody:
  *       required: true
@@ -33,6 +34,7 @@ router.post("/register", authController.register);
  * @swagger
  * /login:
  *   post:
+ *     tags: [Auth]
  *     summary: Log in and receive a JWT
  *     requestBody:
  *       required: true
@@ -57,6 +59,7 @@ router.post("/login", authController.login);
  * @swagger
  * /customers:
  *   get:
+ *     tags: [Auth]
  *     summary: Get all customers
  *     security:
  *       - bearerAuth: []

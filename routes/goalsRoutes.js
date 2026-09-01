@@ -7,6 +7,7 @@ const authenticateToken = require("../middleware/authenticateToken");
  * @swagger
  * /goals:
  *   post:
+ *     tags: [Goals]
  *     summary: Set or update your study goal
  *     security:
  *       - bearerAuth: []
@@ -17,8 +18,11 @@ const authenticateToken = require("../middleware/authenticateToken");
  *           schema:
  *             type: object
  *             properties:
- *               targetWordCount: { type: number }
- *               examDate: { type: string, format: date }
+ *               targetWordCount:
+ *                 type: number
+ *               examDate:
+ *                 type: string
+ *                 format: date
  *     responses:
  *       201:
  *         description: Goal set successfully
@@ -29,6 +33,7 @@ router.post("/goals", authenticateToken, goalsController.create);
  * @swagger
  * /goals/progress:
  *   get:
+ *     tags: [Goals]
  *     summary: Get your progress toward your study goal
  *     security:
  *       - bearerAuth: []
@@ -39,6 +44,5 @@ router.post("/goals", authenticateToken, goalsController.create);
  *         description: No goal set yet
  */
 router.get("/goals/progress", authenticateToken, goalsController.progress);
-
 
 module.exports = router;

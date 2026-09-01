@@ -10,12 +10,24 @@ async function getAnswerShortQuestion(customerId) {
     quizId: word._id,
     definition: word.definition,
     partOfSpeech: word.partOfSpeech
-    // kelimenin kendisi ASLA döndürülmez — cevap bu olacak
   };
 }
 
 function checkAnswer(correctWord, userAnswer) {
   return correctWord.trim().toLowerCase() === userAnswer.trim().toLowerCase();
+}
+
+async function submitAnswer(quizId, userAnswer) {
+  const db = require("../config/db").getDB();
+  const { ObjectId } = require("mongodb");
+
+  const word = await db.collection("savedWords").findOne({ _id: new ObjectId(quizId) });
+  if (!word) throw new Error("Question not found");
+
+  const isCorrect = checkAnswer(word.word, userAnswer);
+  await savedWordsRepository.updateReviewResult(quizId, { correct: isCorrect });
+
+  return { correct: isCorrect, correctWord: word.word };
 }
 
 async function getMultipleChoice(customerId) {
@@ -25,7 +37,7 @@ async function getMultipleChoice(customerId) {
   }
 
   const correctWord = words[0];
-  const options = words.map(w => w.word).sort(() => Math.random() - 0.5);   // karıştır
+  const options = words.map(w => w.word).sort(() => Math.random() - 0.5);
 
   return {
     quizId: correctWord._id,
@@ -34,4 +46,8 @@ async function getMultipleChoice(customerId) {
   };
 }
 
-module.exports = { getAnswerShortQuestion, checkAnswer, getMultipleChoice };
+async function getDueForReview(customerId) {
+  return await savedWordsRepository.findDueForReview(customerId);
+}
+
+module.exports = { getAnswerShortQuestion, submitAnswer, getMultipleChoice, getDueForReview };

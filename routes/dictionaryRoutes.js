@@ -6,6 +6,7 @@ const dictionaryController = require("../controllers/dictionaryController");
  * @swagger
  * /dictionary/{word}:
  *   get:
+ *     tags: [Dictionary]
  *     summary: Look up a word's definition
  *     parameters:
  *       - in: path
@@ -20,6 +21,5 @@ const dictionaryController = require("../controllers/dictionaryController");
  *         description: Word not found
  */
 router.get("/dictionary/:word", dictionaryController.lookup);
-
 
 module.exports = router;

@@ -64,4 +64,38 @@ async function findRandomMultiple(customerId, count) {
     .toArray();
 }
 
-module.exports = { insert, findByCustomer, findByWordAndCustomer, deleteById, updateRelatedWords, findRandom, findRandomMultiple };
+async function findDueForReview(customerId) {
+  const db = getDB();
+  return await db.collection("savedWords").find({
+    customerId: new ObjectId(customerId),
+    $or: [
+      { nextReviewAt: { $lte: new Date() } },
+      { nextReviewAt: { $exists: false } }   // words never reviewed yet are also due
+    ]
+  }).toArray();
+}
+
+async function updateReviewResult(id, { correct }) {
+  const db = getDB();
+  const word = await db.collection("savedWords").findOne({ _id: new ObjectId(id) });
+
+  const currentInterval = word.intervalDays || 1;
+  const newInterval = correct ? currentInterval * 2 : 1;
+
+  const nextReviewAt = new Date();
+  nextReviewAt.setDate(nextReviewAt.getDate() + newInterval);
+
+  return await db.collection("savedWords").updateOne(
+    { _id: new ObjectId(id) },
+    {
+      $set: {
+        lastReviewedAt: new Date(),
+        nextReviewAt,
+        intervalDays: newInterval
+      },
+      $inc: { reviewCount: 1 }
+    }
+  );
+}
+
+module.exports = { insert, findByCustomer, findByWordAndCustomer, deleteById, updateRelatedWords, findRandom, findRandomMultiple, findDueForReview, updateReviewResult };
