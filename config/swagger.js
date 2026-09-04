@@ -18,8 +18,8 @@ const options = {
       { name: "Goals", description: "Set and track your PTE study goal" },
       { name: "Achievements", description: "Milestones unlocked as you save words" },
       { name: "Quiz", description: "Practice with Answer Short Question and Multiple Choice quizzes" },
-      { name: "Operations", description: "Server health checks" }
-      { name: "Admin", description: "Admin-only endpoints for managing all users' data" },
+      { name: "Operations", description: "Server health checks" },
+      { name: "Admin", description: "Admin-only endpoints for managing all users' data" }
     ],
     components: {
       securitySchemes: {
